@@ -402,6 +402,7 @@ type TestCase struct {
 // DeployConfig contains all the configuration needed by the deploy steps.
 type DeployConfig struct {
 	DeployType `yaml:",inline"`
+	Stages     []StageConfig `yaml:"stages,omitempty"`
 
 	// StatusCheckDeadlineSeconds *beta* is the deadline for deployments to stabilize in seconds.
 	StatusCheckDeadlineSeconds int `yaml:"statusCheckDeadlineSeconds,omitempty"`
@@ -409,6 +410,11 @@ type DeployConfig struct {
 	// KubeContext is the Kubernetes context that Skaffold should deploy to.
 	// For example: `minikube`.
 	KubeContext string `yaml:"kubeContext,omitempty"`
+}
+
+type StageConfig struct {
+	DeployType `yaml:",inline"`
+	Name       string `yaml:"name" yamltags:"required"`
 }
 
 // DeployType contains the specific implementation and parameters needed

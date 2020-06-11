@@ -108,7 +108,7 @@ func TestKustomizeDeploy(t *testing.T) {
 					Namespace: testNamespace,
 					Force:     test.forceDeploy,
 				},
-			})
+			}, nil)
 			err := k.Deploy(context.Background(), ioutil.Discard, test.builds, nil).GetError()
 
 			t.CheckError(test.shouldErr, err)
@@ -184,7 +184,7 @@ func TestKustomizeCleanup(t *testing.T) {
 				Opts: config.SkaffoldOptions{
 					Namespace: testNamespace,
 				},
-			})
+			}, nil)
 			err := k.Cleanup(context.Background(), ioutil.Discard)
 
 			t.CheckError(test.shouldErr, err)
@@ -380,7 +380,7 @@ func TestDependenciesForKustomization(t *testing.T) {
 					},
 				},
 				KubeContext: testKubeContext,
-			})
+			}, nil)
 			deps, err := k.Dependencies()
 
 			t.CheckErrorAndDeepEqual(test.shouldErr, err, tmpDir.Paths(test.expected...), deps)
@@ -654,7 +654,7 @@ spec:
 				Opts: config.SkaffoldOptions{
 					Namespace: testNamespace,
 				},
-			})
+			}, nil)
 			var b bytes.Buffer
 			err := k.Render(context.Background(), &b, test.builds, test.labels, "")
 			t.CheckError(test.shouldErr, err)

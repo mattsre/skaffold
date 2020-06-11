@@ -92,16 +92,20 @@ type KustomizeDeployer struct {
 	BuildArgs          []string
 }
 
-func NewKustomizeDeployer(runCtx *runcontext.RunContext) *KustomizeDeployer {
+func NewKustomizeDeployer(runCtx *runcontext.RunContext, kustomizeDeploy *latest.KustomizeDeploy) *KustomizeDeployer {
+	if kustomizeDeploy == nil {
+		kustomizeDeploy = runCtx.Cfg.Deploy.KustomizeDeploy
+	}
+
 	return &KustomizeDeployer{
-		KustomizeDeploy: runCtx.Cfg.Deploy.KustomizeDeploy,
+		KustomizeDeploy: kustomizeDeploy,
 		kubectl: deploy.CLI{
 			CLI:         kubectl.NewFromRunContext(runCtx),
-			Flags:       runCtx.Cfg.Deploy.KustomizeDeploy.Flags,
+			Flags:       kustomizeDeploy.Flags,
 			ForceDeploy: runCtx.Opts.Force,
 		},
 		insecureRegistries: runCtx.InsecureRegistries,
-		BuildArgs:          runCtx.Cfg.Deploy.KustomizeDeploy.BuildArgs,
+		BuildArgs:          kustomizeDeploy.BuildArgs,
 	}
 }
 

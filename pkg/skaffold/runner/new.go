@@ -195,15 +195,31 @@ func getDeployer(runCtx *runcontext.RunContext) deploy.Deployer {
 	var deployers deploy.DeployerMux
 
 	if runCtx.Cfg.Deploy.HelmDeploy != nil {
-		deployers = append(deployers, deploy.NewHelmDeployer(runCtx))
+		deployers = append(deployers, deploy.NewHelmDeployer(runCtx, nil))
 	}
 
 	if runCtx.Cfg.Deploy.KubectlDeploy != nil {
-		deployers = append(deployers, deploy.NewKubectlDeployer(runCtx))
+		deployers = append(deployers, deploy.NewKubectlDeployer(runCtx, nil))
 	}
 
 	if runCtx.Cfg.Deploy.KustomizeDeploy != nil {
-		deployers = append(deployers, deploy.NewKustomizeDeployer(runCtx))
+		deployers = append(deployers, deploy.NewKustomizeDeployer(runCtx, nil))
+	}
+
+	if runCtx.Cfg.Deploy.Stages != nil {
+		for _, stage := range runCtx.Cfg.Deploy.Stages {
+			if stage.HelmDeploy != nil {
+				deployers = append(deployers, deploy.NewHelmDeployer(runCtx, stage.HelmDeploy))
+			}
+
+			if stage.KubectlDeploy != nil {
+				deployers = append(deployers, deploy.NewKubectlDeployer(runCtx, stage.KubectlDeploy))
+			}
+
+			if stage.KustomizeDeploy != nil {
+				deployers = append(deployers, deploy.NewKustomizeDeployer(runCtx, stage.KustomizeDeploy))
+			}
+		}
 	}
 
 	// avoid muxing overhead when only a single deployer is configured

@@ -50,13 +50,17 @@ type KubectlDeployer struct {
 
 // NewKubectlDeployer returns a new KubectlDeployer for a DeployConfig filled
 // with the needed configuration for `kubectl apply`
-func NewKubectlDeployer(runCtx *runcontext.RunContext) *KubectlDeployer {
+func NewKubectlDeployer(runCtx *runcontext.RunContext, kubectlDeploy *latest.KubectlDeploy) *KubectlDeployer {
+	if kubectlDeploy == nil {
+		kubectlDeploy = runCtx.Cfg.Deploy.KubectlDeploy
+	}
+
 	return &KubectlDeployer{
-		KubectlDeploy: runCtx.Cfg.Deploy.KubectlDeploy,
+		KubectlDeploy: kubectlDeploy,
 		workingDir:    runCtx.WorkingDir,
 		kubectl: deploy.CLI{
 			CLI:         kubectl.NewFromRunContext(runCtx),
-			Flags:       runCtx.Cfg.Deploy.KubectlDeploy.Flags,
+			Flags:       kubectlDeploy.Flags,
 			ForceDeploy: runCtx.Opts.Force,
 		},
 		insecureRegistries: runCtx.InsecureRegistries,

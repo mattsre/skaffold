@@ -169,7 +169,7 @@ spec:
 						},
 					},
 				},
-			})
+			}, nil)
 			var b bytes.Buffer
 			err := deployer.Render(context.Background(), &b, test.builds, test.labels, "")
 
@@ -354,7 +354,7 @@ spec:
 						},
 					},
 				},
-			})
+			}, nil)
 			var b bytes.Buffer
 			err := deployer.Render(context.Background(), &b, test.builds, test.labels, "")
 

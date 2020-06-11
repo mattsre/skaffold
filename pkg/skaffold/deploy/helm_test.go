@@ -769,7 +769,7 @@ func TestHelmDeploy(t *testing.T) {
 
 			event.InitializeState(test.runContext.Cfg, "test", true, true, true)
 
-			deployer := NewHelmDeployer(test.runContext)
+			deployer := NewHelmDeployer(test.runContext, nil)
 			deployer.pkgTmpDir = tmpDir
 			result := deployer.Deploy(context.Background(), ioutil.Discard, test.builds, nil)
 
@@ -838,7 +838,7 @@ func TestHelmCleanup(t *testing.T) {
 
 			event.InitializeState(test.runContext.Cfg, "test", true, true, true)
 
-			deployer := NewHelmDeployer(test.runContext)
+			deployer := NewHelmDeployer(test.runContext, nil)
 			err := deployer.Cleanup(context.Background(), ioutil.Discard)
 			t.CheckError(test.shouldErr, err)
 			t.CheckDeepEqual(test.expectedWarnings, fakeWarner.Warnings)
@@ -948,7 +948,7 @@ func TestHelmDependencies(t *testing.T) {
 					Remote:                test.remote,
 				},
 				},
-			}, false))
+			}, false), nil)
 
 			deps, err := deployer.Dependencies()
 
@@ -1120,7 +1120,7 @@ func TestHelmRender(t *testing.T) {
 				file = t.NewTempDir().Path(test.outputFile)
 			}
 
-			deployer := NewHelmDeployer(test.runContext)
+			deployer := NewHelmDeployer(test.runContext, nil)
 
 			t.Override(&util.DefaultExecCommand, test.commands)
 			err := deployer.Render(context.Background(), ioutil.Discard, test.builds, nil, file)
